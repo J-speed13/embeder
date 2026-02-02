@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern HTML Embedder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>   
+        .preview-container {
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">HTML Link Embedder</h1>
+            <p class="text-slate-500 mt-2">Preview how websites look when embedded in an iframe.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar Controls -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Configuration</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Target URL</label>
+                            <input type="text" id="urlInput" placeholder="https://example.com" 
+                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Height (px)</label>
+                            <input type="number" id="heightInput" value="500" 
+                                class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm">
+                        </div>
+
+                        <button id="updateBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md shadow-blue-200 transition-all transform active:scale-95">
+                            Update Preview
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <p class="text-xs text-blue-700 leading-relaxed">
+                        <strong>Note:</strong> Some websites (like Google or Facebook) block embedding for security reasons using <code>X-Frame-Options</code>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main Preview Area -->
+            <div class="lg:col-span-3">
+                <div class="preview-container bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+                    <!-- Browser Chrome -->
+                    <div class="bg-slate-100 border-b border-slate-200 p-3 flex items-center justify-between">
+                        <div class="flex space-x-1.5">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                        </div>
+                        <div id="urlDisplay" class="text-xs text-slate-400 font-mono truncate max-w-xs md:max-w-md bg-white px-3 py-1 rounded border border-slate-200">
+                            No URL loaded
+                        </div>
+                        <div id="statusIndicator" class="status-pill bg-slate-200 text-slate-600">
+                            Idle
+                        </div>
+                    </div>
+
+                    <!-- Embed Area -->
+                    <div id="embedWrapper" class="relative bg-slate-200 flex items-center justify-center overflow-auto p-4 md:p-8 min-h-[400px]">
+                        <div id="placeholder" class="text-center">
+                            <svg class="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                            </svg>
+                            <p class="text-slate-500 font-medium">Enter a URL to begin previewing</p>
+                        </div>
+                        <iframe id="previewFrame" class="hidden w-full bg-white rounded shadow-sm border-0" src=""></iframe>
+                    </div>
+                </div>
+                
+                <!-- Code Snippet -->
+                <div class="mt-6">
+                    <h3 class="text-sm font-semibold text-slate-500 mb-2">Embed Code</h3>
+                    <div class="relative">
+                        <pre id="codeOutput" class="bg-slate-800 text-slate-300 p-4 rounded-xl text-xs overflow-x-auto font-mono">
+&lt;!-- Enter URL above to generate code --&gt;</pre>
+                        <button onclick="copyCode()" class="absolute top-2 right-2 p-2 bg-slate-700 hover:bg-slate-600 rounded-md text-slate-300 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const heightInput = document.getElementById('heightInput');
+        const updateBtn = document.getElementById('updateBtn');
+        const previewFrame = document.getElementById('previewFrame');
+        const placeholder = document.getElementById('placeholder');
+        const urlDisplay = document.getElementById('urlDisplay');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const codeOutput = document.getElementById('codeOutput');
+
+        function updateEmbed() {
+            let url = urlInput.value.trim();
+            const height = heightInput.value || 500;
+
+            if (!url) {
+                alert('Please enter a valid URL');
+                return;
+            }
+
+            // Ensure URL has protocol
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+                urlInput.value = url;
+            }
+
+            // Update UI
+            placeholder.classList.add('hidden');
+            previewFrame.classList.remove('hidden');
+            previewFrame.style.height = height + 'px';
+            previewFrame.src = url;
+            urlDisplay.textContent = url;
+            
+            statusIndicator.textContent = 'Loading...';
+            statusIndicator.className = 'status-pill bg-yellow-100 text-yellow-700';
+
+            // Generate Code
+            const snippet = `<iframe src="${url}" width="100%" height="${height}" frameborder="0"></iframe>`;
+            codeOutput.textContent = snippet;
+        }
+
+        previewFrame.onload = function() {
+            statusIndicator.textContent = 'Live';
+            statusIndicator.className = 'status-pill bg-green-100 text-green-700';
+        };
+
+        function copyCode() {
+            const text = codeOutput.textContent;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<span class="text-[10px] font-bold">COPIED!</span>';
+            setTimeout(() => btn.innerHTML = originalHtml, 2000);
+        }
+
+        updateBtn.addEventListener('click', updateEmbed);
+
+        // Allow Enter key to trigger update
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateEmbed();
+        });
+    </script>
+</body>
+</html>

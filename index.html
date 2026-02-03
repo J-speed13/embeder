@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retro Arcade - 50+ Games</title>
+    <link id="favicon" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600&display=swap');
@@ -87,15 +88,29 @@
         #io-game-frame {
             background: #000;
         }
+
+        /* Teacher Mode Styling */
+        #teacher-mode-overlay {
+            font-family: "Times New Roman", Times, serif;
+            background: white;
+            color: black;
+            padding: 40px;
+            line-height: 1.6;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="p-4 md:p-6 text-center border-b border-gray-800 bg-gray-900 shadow-lg z-10 flex-shrink-0">
+    <header class="p-4 md:p-6 text-center border-b border-gray-800 bg-gray-900 shadow-lg z-10 flex-shrink-0 relative">
         <h1 class="font-arcade text-xl md:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 animate-pulse">
             RETRO ARCADE
         </h1>
+        <!-- Teacher Mode Button -->
+        <button onclick="toggleTeacherMode()" class="absolute top-4 right-4 text-xs bg-gray-700 hover:bg-gray-600 text-gray-400 px-2 py-1 rounded border border-gray-600" title="Shortcut: Press '='">
+            🎓 Teacher Mode
+        </button>
     </header>
 
     <!-- Navigation Tabs -->
@@ -171,62 +186,84 @@
             </div>
         </div>
 
-        <!-- IO ARENA SECTION -->
+        <!-- IO ARENA SECTION (UNBLOCKED EDITION) -->
         <div id="section-io" class="w-full max-w-6xl hidden">
-            <h2 class="text-xl font-bold text-white mb-4 border-l-4 border-blue-500 pl-3">IO Arena (Embedded)</h2>
-            <div class="bg-blue-900/30 border border-blue-800 p-3 mb-6 rounded-lg text-sm text-blue-200">
-                Note: Some games may block embedding. Use the "New Tab" button if a game doesn't load.
+            <h2 class="text-xl font-bold text-white mb-4 border-l-4 border-blue-500 pl-3">IO Arena (Unblocked Mirrors)</h2>
+            <div class="bg-blue-900/30 border border-blue-800 p-3 mb-6 rounded-lg text-sm text-blue-200 flex justify-between items-center">
+                <span>⚡ Using Github/Proxy mirrors to bypass filters.</span>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <!-- NEW ADDITIONS -->
+                <!-- NEW & UNBLOCKED ADDITIONS -->
+                
+                <!-- Neon 3D (Github Mirror) -->
+                <div onclick="embedGame('https://j-speed13.github.io/neon3d.github.io/', 'Neon 3D')" class="cursor-pointer bg-gray-900 p-4 rounded-xl border-2 border-purple-500 hover:border-pink-500 hover:bg-gray-800 transition flex flex-col items-center text-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                    <span class="text-4xl">🚀</span> 
+                    <span class="font-bold text-white italic text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">NEON 3D</span> 
+                    <span class="text-xs text-green-400 font-bold">UNBLOCKED ▶</span>
+                </div>
+
+                <!-- Poxel -->
                 <div onclick="embedGame('https://poxel.io', 'Poxel.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">📦</span> 
                     <span class="font-bold text-white">Poxel.io</span> 
                     <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
 
-                <div onclick="embedGame('https://j-speed13.github.io/neon3d.github.io/', 'Neon 3D')" class="cursor-pointer bg-gray-900 p-4 rounded-xl border-2 border-purple-500 hover:border-pink-500 hover:bg-gray-800 transition flex flex-col items-center text-center gap-2 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
-                    <span class="text-4xl">🚀</span> 
-                    <span class="font-bold text-white italic text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">NEON 3D</span> 
-                    <span class="text-xs text-purple-400 animate-pulse">PRO PICK ▶</span>
+                <!-- 1v1.LOL (Github Mirror) -->
+                <div onclick="embedGame('https://1v1-lol.github.io/', '1v1.LOL')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
+                    <span class="text-4xl">⚔️</span> 
+                    <span class="font-bold text-white">1v1.LOL</span> 
+                    <span class="text-xs text-green-400">GH Mirror ▶</span>
                 </div>
 
-                <!-- Row 1 -->
-                <div onclick="embedGame('https://bloxd.io', 'Bloxd.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🧱</span> <span class="font-bold text-white">Bloxd.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
+                <!-- Krunker (BrowserFPS Mirror) -->
+                <div onclick="embedGame('https://browserfps.com/', 'Krunker.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
+                    <span class="text-4xl">🎯</span> 
+                    <span class="font-bold text-white">Krunker.io</span> 
+                    <span class="text-xs text-green-400">Proxy Site ▶</span>
                 </div>
-                <div onclick="embedGame('https://hole.io', 'Hole.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🕳️</span> <span class="font-bold text-white">Hole.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
+
+                <!-- Bloxd (Staging Mirror) -->
+                <div onclick="embedGame('https://staging.bloxd.io', 'Bloxd.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
+                    <span class="text-4xl">🧱</span> <span class="font-bold text-white">Bloxd.io</span> <span class="text-xs text-green-400">Alt Link ▶</span>
                 </div>
+
+                <!-- Hole.io (.com Mirror) -->
+                <div onclick="embedGame('https://hole-io.com', 'Hole.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
+                    <span class="text-4xl">🕳️</span> <span class="font-bold text-white">Hole.io</span> <span class="text-xs text-green-400">Unblocked ▶</span>
+                </div>
+
+                <!-- Paper.io 2 (.com Mirror) -->
+                <div onclick="embedGame('https://paperio2.com', 'Paper.io 2')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
+                    <span class="text-4xl">📃</span> <span class="font-bold text-white">Paper.io 2</span> <span class="text-xs text-green-400">Unblocked ▶</span>
+                </div>
+                
+                <!-- Slither (.com Mirror) -->
+                <div onclick="embedGame('http://slither.com', 'Slither.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
+                    <span class="text-4xl">🐛</span> <span class="font-bold text-white">Slither.io</span> <span class="text-xs text-green-400">HTTP Mirror ▶</span>
+                </div>
+
+                <!-- Voxiom -->
                 <div onclick="embedGame('https://voxiom.io', 'Voxiom.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">🔫</span> <span class="font-bold text-white">Voxiom</span> <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
-                <div onclick="embedGame('https://slither.io', 'Slither.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🐛</span> <span class="font-bold text-white">Slither.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
 
-                <!-- Row 2 -->
-                <div onclick="embedGame('https://paper-io.com', 'Paper.io 2')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">📃</span> <span class="font-bold text-white">Paper.io 2</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
-                <div onclick="embedGame('https://krunker.io', 'Krunker.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🎯</span> <span class="font-bold text-white">Krunker.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
+                <!-- Agar.io -->
                 <div onclick="embedGame('https://agar.io', 'Agar.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">🦠</span> <span class="font-bold text-white">Agar.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
-                <div onclick="embedGame('https://1v1.lol', '1v1.LOL')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">⚔️</span> <span class="font-bold text-white">1v1.LOL</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
  
-                <!-- Row 3 (New) -->
+                <!-- Diep.io -->
                  <div onclick="embedGame('https://diep.io', 'Diep.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">🔵</span> <span class="font-bold text-white">Diep.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
+                
+                <!-- Snake.io -->
                 <div onclick="embedGame('https://snake.io', 'Snake.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">🐍</span> <span class="font-bold text-white">Snake.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
+                
                  <div onclick="embedGame('https://skribbl.io', 'Skribbl.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">✏️</span> <span class="font-bold text-white">Skribbl.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
@@ -235,15 +272,6 @@
                 </div>
                  <div onclick="embedGame('https://gartic.io', 'Gartic.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
                     <span class="text-4xl">🎨</span> <span class="font-bold text-white">Gartic.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
-                 <div onclick="embedGame('https://littlebigsnake.com', 'Little Big Snake')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🐞</span> <span class="font-bold text-white">LittleBigSnake</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
-                <div onclick="embedGame('https://zombsroyale.io', 'Zombs Royale')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🧟</span> <span class="font-bold text-white">ZombsRoyale</span> <span class="text-xs text-blue-400">Play Now ▶</span>
-                </div>
-                <div onclick="embedGame('https://mope.io', 'Mope.io')" class="cursor-pointer bg-gray-800 p-4 rounded-xl border border-gray-700 hover:border-blue-400 hover:bg-gray-700 transition flex flex-col items-center text-center gap-2">
-                    <span class="text-4xl">🐭</span> <span class="font-bold text-white">Mope.io</span> <span class="text-xs text-blue-400">Play Now ▶</span>
                 </div>
             </div>
         </div>
@@ -375,10 +403,19 @@
                 </div>
                 <span id="io-game-title" class="font-bold text-white hidden md:block">IO Game</span>
                 <a id="io-fallback-link" href="#" target="_blank" class="text-blue-400 text-xs hover:text-white flex items-center gap-1">
-                    Is the screen white? Open in New Tab ↗
+                    Is the screen white? Try Google Translate Proxy ↗
                 </a>
             </div>
             <iframe id="io-game-frame" src="" class="flex-grow w-full border-0 bg-black" allow="fullscreen"></iframe>
+        </div>
+
+        <!-- TEACHER MODE OVERLAY -->
+        <div id="teacher-mode-overlay" class="hidden fixed inset-0 w-full h-full bg-white z-[100]">
+            <h1 style="font-size: 24px; color: black; border-bottom: 1px solid #ccc; padding-bottom: 10px;">History of the Calculator</h1>
+            <p style="margin-top: 20px;">The first mechanical calculator, the Pascaline, was invented by Blaise Pascal in 1642. It could only perform addition and subtraction. Later, Gottfried Wilhelm Leibniz invented the Stepped Reckoner in 1672, which could also perform multiplication and division.</p>
+            <p>In the 19th century, Charles Babbage designed the Difference Engine and the Analytical Engine, which are considered the precursors to modern computers. However, these machines were never fully completed during his lifetime.</p>
+            <p>The electronic calculator was developed in the 1960s, and by the 1970s, pocket-sized calculators became widely available. Today, calculators are integrated into computers and smartphones.</p>
+            <div style="margin-top: 40px; font-style: italic; color: #666;">Source: Educational Historical Archives, Vol 4.</div>
         </div>
 
     </main>
@@ -391,6 +428,29 @@
     <script>
         // --- GLOBAL STATE & TAB LOGIC ---
         let currentGame = null;
+
+        // Teacher Mode Logic
+        function toggleTeacherMode() {
+            const overlay = document.getElementById('teacher-mode-overlay');
+            const favicon = document.getElementById('favicon');
+            
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+                document.title = "History of Calculators - Wikipedia";
+                favicon.href = "https://en.wikipedia.org/static/favicon/wikipedia.ico"; // Fake Wiki Icon
+            } else {
+                overlay.classList.add('hidden');
+                document.title = "Retro Arcade - 50+ Games";
+                favicon.href = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>";
+            }
+        }
+
+        // Keyboard Shortcut for Teacher Mode
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '=') {
+                toggleTeacherMode();
+            }
+        });
 
         function switchTab(tabId) {
             // Update Tab UI
@@ -498,7 +558,11 @@
 
              // Set Props
              frame.src = url;
-             fallback.href = url;
+             
+             // Setup Google Translate Proxy Link
+             const proxyUrl = `https://translate.google.com/translate?sl=auto&tl=en&u=${encodeURIComponent(url)}`;
+             fallback.href = proxyUrl;
+             
              titleEl.innerText = title;
 
              // Show Container
